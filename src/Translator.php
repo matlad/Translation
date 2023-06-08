@@ -75,6 +75,11 @@ class Translator extends \Symfony\Component\Translation\Translator implements \K
 	private $formatter;
 
 	/**
+	 * @var bool 
+	 */
+	private $localeResolved = false;
+
+	/**
 	 * @param \Kdyby\Translation\IUserLocaleResolver $localeResolver
 	 * @param \Symfony\Component\Translation\Formatter\MessageFormatterInterface $formatter
 	 * @param \Kdyby\Translation\CatalogueCompiler $catalogueCompiler
@@ -348,8 +353,9 @@ class Translator extends \Symfony\Component\Translation\Translator implements \K
 	 */
 	public function getLocale()
 	{
-		if (empty(parent::getLocale())) {
+		if (!$this->localeResolved) {
 			$this->setLocale($this->localeResolver->resolve($this));
+			$this->localeResolved = true;
 		}
 
 		return parent::getLocale();
